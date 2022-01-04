@@ -43,6 +43,15 @@ module.exports = function (server) {
 							stream
 								.on('close', () => {
 									conn.end();
+									connectionCount--;
+									connected = false;
+									socket.emit('connectionStatus', false);
+									socket.emit('SSHStatus', 'Not connected');
+									console.log(
+										'Client disconnected. ' + connectionCount > 1
+											? `Current connections: ${connectionCount}`
+											: 'No clients connected.'
+									);
 								})
 
 								.on('data', (data) => {
@@ -60,17 +69,6 @@ module.exports = function (server) {
 				})
 				.on('error', (e) => {
 					emitError(e);
-				})
-				.on('end', () => {
-					connected = false;
-					connectionCount--;
-					socket.emit('connectionStatus', false);
-					socket.emit('SSHStatus', 'Not connected');
-					console.log(
-						'Client disconnected. ' + connectionCount > 1
-							? `Current connections: ${connectionCount}`
-							: 'No clients connected.'
-					);
 				})
 				.connect({
 					host: details.host,
