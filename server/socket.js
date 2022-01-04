@@ -42,7 +42,7 @@ module.exports = function (server) {
 							if (err) console.log('CONN ERR :' + err);
 							stream
 								.on('close', () => {
-									//conn.end();
+									conn.end();
 									connectionCount--;
 									connected = false;
 									socket.emit('connectionStatus', false);
@@ -84,5 +84,9 @@ module.exports = function (server) {
 					password: details.password,
 				});
 		});
+	});
+	process.on('uncaughtException', (err) => {
+		if (err.code === 'ERR_STREAM_WRITE_AFTER_END') return;
+		throw err;
 	});
 };
