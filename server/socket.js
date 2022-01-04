@@ -52,6 +52,7 @@ module.exports = function (server) {
 											? `Current connections: ${connectionCount}`
 											: 'No clients connected.'
 									);
+									stream.end();
 								})
 
 								.on('data', (data) => {
@@ -59,7 +60,10 @@ module.exports = function (server) {
 								})
 								.on('error', (e) => console.error(e));
 
-							socket.on('data', (e) => stream.write(e.toString()));
+							socket.on('data', (e) => {
+								if (!connected) return;
+								stream.write(e.toString());
+							});
 							socket.on('disconnect', () => {
 								stream.end('exit\n');
 								connected = false;
