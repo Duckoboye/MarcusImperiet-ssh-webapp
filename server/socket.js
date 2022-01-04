@@ -52,7 +52,6 @@ module.exports = function (server) {
 											? `Current connections: ${connectionCount}`
 											: 'No clients connected.'
 									);
-									stream.end();
 								})
 
 								.on('data', (data) => {
