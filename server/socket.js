@@ -4,12 +4,11 @@ module.exports = function (server) {
 	const io = new Server(server);
 
 	let connectionCount = 0;
-	function emitError(err) {
-		io.emit('SSHStatus', { body: err, color: 'red', err: true });
-	}
 	io.on('connection', (socket) => {
 		let connected = false;
-
+		function emitError(err) {
+			socket.emit('SSHStatus', { body: err, color: 'red', err: true });
+		}
 		socket.on('loginAttempt', (details) => {
 			//This code handles/verifies socket login attempts and establishes ssh connections.
 
@@ -77,10 +76,10 @@ module.exports = function (server) {
 					password: details.password,
 				});
 		});
-	});
-	process.on('uncaughtException', (err) => {
-		if (err.code === 'ENOTFOUND' || 'EHOSTUNREACH') {
-			emitError(JSON.stringify(err));
-		} else throw err;
+		process.on('uncaughtException', (err) => {
+			if (err.code === 'ENOTFOUND' || 'EHOSTUNREACH') {
+				emitError(JSON.stringify(err));
+			} else throw err;
+		});
 	});
 };

@@ -81,7 +81,6 @@ socket
 				logindiv.style.display = 'none';
 			} else {
 				logindiv.style.display = 'block';
-				term.rows = 20;
 			}
 		}
 	});
