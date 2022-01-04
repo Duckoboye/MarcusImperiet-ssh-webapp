@@ -86,7 +86,8 @@ module.exports = function (server) {
 		});
 	});
 	process.on('uncaughtException', (err) => {
-		if (err.code === 'ERR_STREAM_WRITE_AFTER_END') return;
+		console.log(err);
+		if (err.code == 'ERR_STREAM_WRITE_AFTER_END') return;
 		throw err;
 	});
 };
