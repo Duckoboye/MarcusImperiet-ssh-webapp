@@ -15,10 +15,13 @@ app.use(express.static(path.join(__dirname, '../client/public')));
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/index.html'));
 });
-try {
-	appSocket(server);
-} catch (error) {
-	console.log('err from socket.js');
-}
+
+appSocket(server);
+
+process.on('uncaughtException', (err) => {
+	console.log('uncaught exception: ' + err);
+	if (err.code == 'ERR_STREAM_WRITE_AFTER_END') return;
+	throw err;
+});
 
 server.listen(port, () => console.log('live on http://localhost:' + port));
