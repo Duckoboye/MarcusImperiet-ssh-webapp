@@ -33,7 +33,7 @@ addEventListener('keydown', checkInputs);
 onclick = checkInputs;
 
 button.onclick = () => {
-	if (!checkInputs()) return;
+	if (checkInputs()) return;
 	socket.emit('loginAttempt', {
 		host: hostVal.value,
 		port: portVal.value,
@@ -51,10 +51,10 @@ socket
 	.on('connectionStatus', (state) => {
 		connected = state;
 		statusdiv.style.backgroundColor = state ? 'green' : 'grey';
+		logindiv.style.display = state ? 'none' : 'block';
 	})
 	.on('SSHError', (e) => {
 		{
-			if (connected) return;
 			try {
 				e = JSON.parse(e);
 			} catch (e) {}
@@ -75,7 +75,7 @@ socket
 					term.writeln(
 						`ERROR: ${e.code ?? e.level ?? e}. Error details dumped to console.`
 					);
-					statusmsg.textContent = e.code ?? e.level ?? 'stinky boy';
+					statusmsg.textContent = e.code ?? e.level ?? 'you stinker';
 					console.log(e);
 					break;
 			}
@@ -84,15 +84,10 @@ socket
 	.on('SSHStatus', (e) => {
 		statusmsg.textContent = e;
 		document.title = e;
-		if (connected || e.includes('Connected to')) {
-			logindiv.style.display = 'none';
-		} else {
-			logindiv.style.display = 'block';
-		}
 	});
 
 function checkInputs() {
 	button.disabled =
 		hostVal.value == '' || userVal.value == '' || passVal.value == '';
-	return !button.disabled;
+	return button.disabled;
 }
