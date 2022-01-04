@@ -42,7 +42,7 @@ module.exports = function (server) {
 							if (err) console.log('CONN ERR :' + err);
 							stream
 								.on('close', () => {
-									//conn.end();
+									conn.end();
 									connectionCount--;
 									connected = false;
 									socket.emit('connectionStatus', false);
@@ -60,8 +60,11 @@ module.exports = function (server) {
 								.on('error', (e) => console.error(e));
 
 							socket.on('data', (e) => {
-								if (connected) {
+								if (!connected) return;
+								try {
 									stream.write(e.toString());
+								} catch (error) {
+									console.log(error);
 								}
 							});
 							socket.on('disconnect', () => {
