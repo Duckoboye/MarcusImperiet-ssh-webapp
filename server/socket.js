@@ -56,7 +56,8 @@ module.exports = function (server) {
 
 								.on('data', (data) => {
 									socket.emit('data', data.toString());
-								});
+								})
+								.on('error', (e) => console.error(e));
 
 							socket.on('data', (e) => stream.write(e.toString()));
 							socket.on('disconnect', () => {
@@ -66,6 +67,10 @@ module.exports = function (server) {
 						}
 					);
 				})
+				.on('error', (e) => {
+					emitError(e);
+					console.error('eeeeee ' + e.toString());
+				})
 				.connect({
 					host: details.host,
 					port: details.port === '' ? 22 : details.port,
@@ -73,10 +78,10 @@ module.exports = function (server) {
 					password: details.password,
 				});
 		});
-		process.on('uncaughtException', (err) => {
+		/*process.on('uncaughtException', (err) => {
 			if (err.code === 'ENOTFOUND' || 'EHOSTUNREACH') {
 				emitError(JSON.stringify(err));
 			} else throw err;
-		});
+		});*/
 	});
 };

@@ -59,6 +59,8 @@ socket
 				e = JSON.parse(e);
 			} catch (e) {}
 
+			statusdiv.style.backgroundColor = 'red';
+
 			switch (e.level) {
 				case 'client-timeout':
 					return;
@@ -73,7 +75,7 @@ socket
 					term.writeln(
 						`ERROR: ${e.code ?? e.level ?? e}. Error details dumped to console.`
 					);
-					statusmsg.textContent = e.code ?? e.level;
+					statusmsg.textContent = e.code ?? e.level ?? 'stinky boy';
 					console.log(e);
 					break;
 			}
