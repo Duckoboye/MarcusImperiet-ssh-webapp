@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>SSH-webclient</title>
+		<link rel="stylesheet" href="css/xterm.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="js/xterm.js"></script>
+		<script src="js/FitAddon.js"></script>
+		<script src="js/index.js" defer></script>
+	</head>
+	<body>
+		<div id="terminal-container"></div>
+		<div id="login-div">
+			<div style="display: grid; justify-content: center">
+				<label for="hostinput">Host</label>
+				<input class="required" type="text" id="hostinput" />
+				<label for="portinput">Port</label>
+				<input type="number" id="portinput" value="22" />
+				<label for="userinput">Username</label>
+				<input class="required" type="text" id="userinput" />
+				<label for="passinput">Password</label>
+				<input type="password" id="passinput" />
+				<br />
+				<button id="buttonconnect" disabled>Connect</button>
+			</div>
+		</div>
+		<div id="controlbar">
+			<div id="statusdiv">
+				<h4 id="statusmsg">Not connected</h4>
+			</div>
+		</div>
+	</body>
+</html>
