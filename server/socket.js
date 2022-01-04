@@ -43,15 +43,6 @@ module.exports = function (server) {
 							stream
 								.on('close', () => {
 									conn.end();
-									connected = false;
-									connectionCount--;
-									socket.emit('connectionStatus', false);
-									socket.emit('SSHStatus', 'Not connected');
-									console.log(
-										'Client disconnected. ' + connectionCount > 1
-											? `Current connections: ${connectionCount}`
-											: 'No clients connected.'
-									);
 								})
 
 								.on('data', (data) => {
@@ -69,7 +60,17 @@ module.exports = function (server) {
 				})
 				.on('error', (e) => {
 					emitError(e);
-					console.error('eeeeee ' + e.toString());
+				})
+				.on('end', () => {
+					connected = false;
+					connectionCount--;
+					socket.emit('connectionStatus', false);
+					socket.emit('SSHStatus', 'Not connected');
+					console.log(
+						'Client disconnected. ' + connectionCount > 1
+							? `Current connections: ${connectionCount}`
+							: 'No clients connected.'
+					);
 				})
 				.connect({
 					host: details.host,
@@ -78,10 +79,5 @@ module.exports = function (server) {
 					password: details.password,
 				});
 		});
-		/*process.on('uncaughtException', (err) => {
-			if (err.code === 'ENOTFOUND' || 'EHOSTUNREACH') {
-				emitError(JSON.stringify(err));
-			} else throw err;
-		});*/
 	});
 };
