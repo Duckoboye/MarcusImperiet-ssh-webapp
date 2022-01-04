@@ -48,13 +48,18 @@ socket
 	.on('data', (data) => {
 		term.write(data);
 	})
-	.on('connected', (state) => (connected = state))
-	.on('SSHStatus', (e) => {
-		statusdiv.style.backgroundColor = e.color;
-		if (e.err) {
+	.on('connectionStatus', (state) => {
+		connected = state;
+		statusdiv.style.backgroundColor = state ? 'green' : 'grey';
+	})
+	.on('SSHError', (e) => {
+		{
 			if (connected) return;
-			e.body = JSON.parse(e.body);
-			switch (e.body.level) {
+			try {
+				e = JSON.parse(e);
+			} catch (e) {}
+
+			switch (e.level) {
 				case 'client-timeout':
 					return;
 				case 'client-authentication':
@@ -66,22 +71,21 @@ socket
 					return;
 				default:
 					term.writeln(
-						`ERROR: ${
-							e.body.code ?? e.body.level
-						}. Error details dumped to console.`
+						`ERROR: ${e.code ?? e.level ?? e}. Error details dumped to console.`
 					);
-					statusmsg.textContent = e.body.code ?? e.body.level;
-					console.error(e.body);
+					statusmsg.textContent = e.code ?? e.level;
+					console.log(e);
 					break;
 			}
+		}
+	})
+	.on('SSHStatus', (e) => {
+		statusmsg.textContent = e;
+		document.title = e;
+		if (connected || e.includes('Connected to')) {
+			logindiv.style.display = 'none';
 		} else {
-			statusmsg.textContent = e.body;
-			document.title = e.body;
-			if (connected || e.body.includes('Connected to')) {
-				logindiv.style.display = 'none';
-			} else {
-				logindiv.style.display = 'block';
-			}
+			logindiv.style.display = 'block';
 		}
 	});
 

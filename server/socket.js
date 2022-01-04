@@ -7,7 +7,7 @@ module.exports = function (server) {
 	io.on('connection', (socket) => {
 		let connected = false;
 		function emitError(err) {
-			socket.emit('SSHStatus', { body: err, color: 'red', err: true });
+			socket.emit('SSHError', err);
 		}
 		socket.on('loginAttempt', (details) => {
 			//This code handles/verifies socket login attempts and establishes ssh connections.
@@ -15,7 +15,7 @@ module.exports = function (server) {
 			if (connected) return; //If user is already connected, keep them from making a new connection.
 
 			function emitStatus(msg) {
-				socket.emit('SSHStatus', { body: msg, color: 'green' });
+				socket.emit('SSHStatus', msg);
 			}
 			//validates neccesary inputs to make sure that they're valid. If they aren't, emit error message on socket.
 			if (details.host === '')
@@ -32,7 +32,7 @@ module.exports = function (server) {
 					connected = true;
 					connectionCount++;
 					emitStatus(`Connected to ${details.host}`);
-					socket.emit('Connected', true);
+					socket.emit('connectionStatus', true);
 					console.log(
 						`Client connected. Current connections: ${connectionCount}`
 					);
@@ -45,11 +45,8 @@ module.exports = function (server) {
 									conn.end();
 									connected = false;
 									connectionCount--;
-									socket.emit('Connected', false);
-									socket.emit('SSHStatus', {
-										body: 'Not connected',
-										color: 'Grey',
-									});
+									socket.emit('connectionStatus', false);
+									socket.emit('SSHStatus', 'Not connected');
 									console.log(
 										'Client disconnected. ' + connectionCount > 1
 											? `Current connections: ${connectionCount}`
