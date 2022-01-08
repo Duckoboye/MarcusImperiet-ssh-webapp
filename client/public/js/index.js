@@ -87,7 +87,6 @@ socket
 	});
 
 function checkInputs() {
-	button.disabled =
-		hostVal.value == '' || userVal.value == '' || passVal.value == '';
+	button.disabled = hostVal.value == '' || userVal.value == '';
 	return button.disabled;
 }
