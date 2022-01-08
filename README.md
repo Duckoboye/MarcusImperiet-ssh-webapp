@@ -2,9 +2,9 @@
 
 Clone this repo using
 
-git clone https://github.com/Duckoboye/MarcusImperiet-ssh-webapp.git
+git clone https://github.com/Duckoboye/ssh-client-webapp.git
 
-cd into MarcusImperiet-ssh-webapp
+cd into ssh-client-webapp
 
 **Install npm/node:**
 
