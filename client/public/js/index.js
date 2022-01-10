@@ -56,15 +56,18 @@ socket
 
 			statusdiv.style.backgroundColor = 'red';
 
-			switch (e.level) {
+			switch (e.code ?? e.level) {
 				case 'client-timeout':
 					return;
 				case 'client-authentication':
 					term.write('Password or username incorrect. Please try again.\n');
 					return (statusmsg.textContent = 'Authentication failure');
-				case 'client-socket':
-					term.write('Invalid host.\n');
+				case 'ECONNRESET':
+					break;
+				case 'ENOTFOUND':
+					term.write('Invalid host\n');
 					statusmsg.textContent = 'Invalid host';
+					console.log(e);
 					return;
 				default:
 					term.writeln(

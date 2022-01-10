@@ -11,7 +11,6 @@ module.exports = function (server) {
 		}
 		socket.on('loginAttempt', (details) => {
 			//This code handles/verifies socket login attempts and establishes ssh connections.
-
 			if (connected) return; //If user is already connected, keep them from making a new connection.
 
 			function emitStatus(msg) {
@@ -70,6 +69,7 @@ module.exports = function (server) {
 							socket.on('disconnect', () => {
 								stream.end('exit\n');
 								connected = false;
+								conn.end();
 							});
 						}
 					);
