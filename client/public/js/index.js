@@ -29,20 +29,15 @@ term.onData((e) => {
 	socket.emit('data', e);
 });
 
+logindiv.addEventListener('keyup', (e) => {
+	if (e.code != 'Enter') return;
+	tryLogin();
+});
+
 addEventListener('keydown', checkInputs);
 onclick = checkInputs;
 
-button.onclick = () => {
-	if (checkInputs()) return;
-	socket.emit('loginAttempt', {
-		host: hostVal.value,
-		port: portVal.value,
-		username: userVal.value,
-		password: passVal.value,
-		cols: term.cols,
-		rows: term.rows,
-	});
-};
+button.onclick = tryLogin;
 
 socket
 	.on('data', (data) => {
@@ -89,4 +84,16 @@ socket
 function checkInputs() {
 	button.disabled = hostVal.value == '' || userVal.value == '';
 	return button.disabled;
+}
+
+function tryLogin() {
+	if (checkInputs()) return;
+	socket.emit('loginAttempt', {
+		host: hostVal.value,
+		port: portVal.value,
+		username: userVal.value,
+		password: passVal.value,
+		cols: term.cols,
+		rows: term.rows,
+	});
 }
