@@ -13,16 +13,15 @@ const statusdiv = document.getElementById('statusdiv');
 let connected = false;
 
 const socket = io();
-socket.on('connect', () => checkInputs());
-const terminalContainer = document.getElementById('terminal-container');
 const term = new Terminal({
 	theme: { background: '#080808' },
 });
 const fitAddon = new FitAddon();
+const terminalContainer = document.getElementById('terminal-container');
+
 term.open(terminalContainer);
 term.loadAddon(fitAddon);
 fitAddon.fit();
-
 onresize = () => fitAddon.fit();
 
 term.onData((e) => {
@@ -30,8 +29,7 @@ term.onData((e) => {
 });
 
 logindiv.addEventListener('keyup', (e) => {
-	if (e.code != 'Enter') return;
-	tryLogin();
+	if (e.code == 'Enter') tryLogin();
 });
 
 addEventListener('keydown', checkInputs);
@@ -84,10 +82,8 @@ socket
 		document.title = e;
 	});
 
-function checkInputs() {
-	button.disabled = hostVal.value == '' || userVal.value == '';
-	return button.disabled;
-}
+function checkInputs() 
+return button.disabled = hostVal.value == '' || userVal.value == '';
 
 function tryLogin() {
 	if (checkInputs()) return;
