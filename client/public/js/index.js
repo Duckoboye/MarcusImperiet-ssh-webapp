@@ -82,8 +82,9 @@ socket
 		document.title = e;
 	});
 
-function checkInputs() 
-return button.disabled = hostVal.value == '' || userVal.value == '';
+function checkInputs() {
+	return button.disabled = hostVal.value == '' || userVal.value == ''
+}
 
 function tryLogin() {
 	if (checkInputs()) return;
